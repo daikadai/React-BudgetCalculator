@@ -1,6 +1,6 @@
 import React from 'react'
 
-const ExpenseItem = () => {
+const ExpenseItem = ({ expense }) => {
   return (
     <div>
       hello from expense item
