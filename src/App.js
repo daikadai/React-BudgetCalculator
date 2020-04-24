@@ -47,13 +47,25 @@ function App() {
       handleAlert({ type: 'danger', text: `charge can't be empty value and amount value has to be bigger than zero` })
     }
   }
+  // Clear All Items
+  const clearItems = () => {
+    setExpenses([]);
+  }
+  // Handle delete
+  const handleDelete = (id) => {
+    console.log(`item deleted: ${id}`);
+  }
+  // Handle Edit
+  const handleEdit = (id) => {
+    console.log(`item edit: ${id}`);
+  }
   return (
     <Fragment>
       {alert.show && <Alert type={alert.type} text={alert.text} />}
       <h1>budge calculator</h1>
       <main className="App">
         <ExpenseForm charge={charge} amount={amount} handleAmount={handleAmount} handleCharge={handleCharge} expenses={expenses} handleSubmit={handleSubmit} />
-        <ExpenseList expenses={expenses} />
+        <ExpenseList expenses={expenses} handleDelete={handleDelete} handleEdit={handleEdit} clearItems={clearItems} />
       </main>
       <h1>
         total spending : <span className="total">
