@@ -21,6 +21,10 @@ function App() {
   const [amount, setAmount] = useState('');
   // alert
   const [alert, setAlert] = useState({ show: false });
+  // edit
+  const [edit, setEdit] = useState(false);
+  // edit item
+  const [id, setId] = useState(0);
   //----- functionality-----
   const handleCharge = e => {
     setCharge(e.target.value)
@@ -37,9 +41,18 @@ function App() {
   const handleSubmit = e => {
     e.preventDefault();
     if (charge !== "" && amount > 0) {
-      const singleExpense = { id: uuid(), charge, amount };
-      setExpenses([...expenses, singleExpense]);
-      handleAlert({ type: 'success', text: 'item added !' });
+      if (edit) {
+        const tempExpense = expenses.map(item => {
+          return item.id === id ? { ...item, charge, amount } : item
+        })
+        setExpenses(tempExpense);
+        setEdit(false);
+        handleAlert({ type: 'success', text: 'item edited !' });
+      } else {
+        const singleExpense = { id: uuid(), charge, amount };
+        setExpenses([...expenses, singleExpense]);
+        handleAlert({ type: 'success', text: 'item added !' });
+      }
       setCharge('');
       setAmount('');
     } else {
@@ -60,14 +73,19 @@ function App() {
   }
   // Handle Edit
   const handleEdit = (id) => {
-    console.log(`item edit: ${id}`);
+    let expense = expenses.find(item => item.id === id);
+    let { charge, amount } = expense;
+    setCharge(charge);
+    setAmount(amount);
+    setEdit(true);
+    setId(id);
   }
   return (
     <Fragment>
       {alert.show && <Alert type={alert.type} text={alert.text} />}
       <h1>budge calculator</h1>
       <main className="App">
-        <ExpenseForm charge={charge} amount={amount} handleAmount={handleAmount} handleCharge={handleCharge} expenses={expenses} handleSubmit={handleSubmit} />
+        <ExpenseForm charge={charge} amount={amount} handleAmount={handleAmount} handleCharge={handleCharge} expenses={expenses} handleSubmit={handleSubmit} edit={edit} />
         <ExpenseList expenses={expenses} handleDelete={handleDelete} handleEdit={handleEdit} clearItems={clearItems} />
       </main>
       <h1>
